@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.checkers.gui.Controller">
+    <children>
+        <MenuBar fx:id="MenuBar" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+      <HBox fx:id="MainPane" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    </children>
+</GridPane>
