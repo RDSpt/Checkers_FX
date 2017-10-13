@@ -34,14 +34,14 @@ public class Double extends Piece {
 	public Collection<Move> calculateLegalMoves(Board board) {
 		
 		final List<Move> legalMoves = new ArrayList<>();
-		for (final int candidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) {
+		for (final int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) {
 			int candidateDestinationCoordinate = this.piecePosition;
 			while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-				if (isFirstColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset) ||
-						isEighthColumnExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)) {
+				if (isFirstColumnExclusion(candidateDestinationCoordinate, currentCandidateCoordinateOffset) ||
+						isEighthColumnExclusion(candidateDestinationCoordinate, currentCandidateCoordinateOffset)) {
 					break;
 				}//if first or last column go left of right
-				candidateDestinationCoordinate += candidateCoordinateOffset;
+				candidateDestinationCoordinate += currentCandidateCoordinateOffset;
 				if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
 					final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
 					if (!candidateDestinationTile.isTileOccupied()) {//Check if tile is not occupied
@@ -52,8 +52,11 @@ public class Double extends Piece {
 						final Alliance pieceAlliance   = pieceAtLocation.getPieceAlliance(); //get piece alliance of the
 						// location
 						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-									pieceAtLocation));
+							if(!board.getTile(candidateDestinationCoordinate+currentCandidateCoordinateOffset)
+									.isTileOccupied()) {
+								legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+										pieceAtLocation));
+							}
 							//ATTACK MOVE
 						}
 						break;

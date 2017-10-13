@@ -46,10 +46,18 @@ public class Single extends Piece {
 						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
 						// location
 						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-									pieceAtLocation));
-							//ATTACK MOVE
+							if (!(BoardUtils.EIGHTH_COLUMN[pieceAtLocation.getPiecePosition()] &&
+									pieceAlliance.isBlack() ||
+									(BoardUtils.FIRST_COLUMN[pieceAtLocation.getPiecePosition()] &&
+											pieceAlliance.isWhite()))) {
+								if (!board.getTile(candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
+										currentCandidateOffset)).isTileOccupied()) {
+									legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+											pieceAtLocation));
+								}
+							}
 						}
+						//ATTACK MOVE
 					}
 				}
 				else if (currentCandidateOffset == 9 &&
@@ -63,8 +71,21 @@ public class Single extends Piece {
 						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
 						// location
 						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-									pieceAtLocation));
+							/*if(!board.getTile(candidateDestinationCoordinate+currentCandidateOffset)
+									.isTileOccupied()) {
+								legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+										pieceAtLocation));
+							}*/
+							if (!(BoardUtils.EIGHTH_COLUMN[pieceAtLocation.getPiecePosition()] &&
+									pieceAlliance.isWhite() ||
+									(BoardUtils.FIRST_COLUMN[pieceAtLocation.getPiecePosition()] &&
+											pieceAlliance.isBlack()))) {
+								if (!board.getTile(candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
+										currentCandidateOffset)).isTileOccupied()) {
+									legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+											pieceAtLocation));
+								}
+							}
 							//ATTACK MOVE
 						}
 					}
@@ -78,7 +99,7 @@ public class Single extends Piece {
 	@Override
 	public Single movePiece(Move move) {
 		
-		return new Single(move.getDestinationCoordinate(),move.getMovedPiece().getPieceAlliance());
+		return new Single(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance());
 	}
 	
 	@Override

@@ -33,11 +33,14 @@ public class Controller {
 	private Piece humanMovedPiece;
 	private TakenPiecesPanel takenPiecesPanel = new TakenPiecesPanel();
 	private SwingNode gameHistoryPanel = new SwingNode();
+	private GameHistoryPanel gameHistoryPane = new GameHistoryPanel();
 	private boolean highlightLegalMoves;
 	private MoveLog moveLog;
 	
 	public void initialize() {
-		gameHistoryPanel.setContent(new GameHistoryPanel());
+		/*gameHistoryPane.setSize(200,200);
+		gameHistoryPanel.setContent(gameHistoryPane);
+		gameHistoryPanel.resize(200,200);*/
 		boardPanel = new BoardPanel();
 		this.moveLog = new MoveLog();
 		boardDirection = BoardDirection.NORMAL;
@@ -46,7 +49,7 @@ public class Controller {
 		MainPane.getChildren().add(boardPanel);
 		boardPanel.setBorder(new Border(new BorderStroke(Color.gray(0.50),BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
 				new BorderWidths(10))));
-		MainPane.getChildren().add(gameHistoryPanel);
+		//MainPane.getChildren().add(gameHistoryPanel);
 		highlightLegalMoves = true;
 	}
 	

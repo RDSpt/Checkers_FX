@@ -28,11 +28,12 @@ public class BoardUtils {
 	public static final int NUM_TILES = 64;
 	public static final int TILES_PER_ROW = 8;
 	
-	public static final List<String> ALGEBREIC_NOTATION = initializeAlgebreicNotation();
+	public static final List<String> ALGEBRAIC_NOTATION = initializeAlgebraicNotation();
 	
 	public static final Map<String, Integer> POSITION_TO_COORDINATE = initializePositionToCoordinateMap();
 	
-	private static List<String> initializeAlgebreicNotation() {
+	private static List<String> initializeAlgebraicNotation() {
+		
 		return ImmutableList.copyOf(new String[]{
 				"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
 				"a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
@@ -46,9 +47,10 @@ public class BoardUtils {
 	}
 	
 	private static Map<String, Integer> initializePositionToCoordinateMap() {
+		
 		final Map<String, Integer> positionToCoordinate = new HashMap<>();
 		for (int i = 0; i < NUM_TILES; i++) {
-			positionToCoordinate.put(ALGEBREIC_NOTATION.get(i), i);
+			positionToCoordinate.put(ALGEBRAIC_NOTATION.get(i), i);
 		}
 		return ImmutableMap.copyOf(positionToCoordinate);
 	}
@@ -58,6 +60,7 @@ public class BoardUtils {
 		
 		throw new RuntimeException("Can't instantiate");
 	}
+	
 	//Methods
 	private static boolean[] initColumn(int columnNumber) {
 		
@@ -70,25 +73,42 @@ public class BoardUtils {
 		return column;
 	}
 	
-	
 	private static boolean[] initRow(int rowNumber) {
+		
 		final boolean[] row = new boolean[NUM_TILES];
-		do{
+		do {
 			row[rowNumber] = true;
 			rowNumber++;
-		}while(rowNumber % TILES_PER_ROW !=0);
+		} while (rowNumber % TILES_PER_ROW != 0);
 		return row;
 	}
 	
 	public static boolean isValidTileCoordinate(int coordinate) {
+		
 		return coordinate >= 0 && coordinate < NUM_TILES;
 	}
 	
 	public static int getCoordinateAtPosition(final String position) {
+		
 		return POSITION_TO_COORDINATE.get(position);
 	}
 	
 	public static String getPositionAtCoordinate(final int coordinate) {
-		return ALGEBREIC_NOTATION.get(coordinate);
+		
+		return ALGEBRAIC_NOTATION.get(coordinate);
+	}
+	
+	public static int getRow(int coordinate) {
+		
+		int row = 0;
+		int count = 1;
+		for (int i = 56; i >= 0 ; i=i-8) {
+			if(initRow(i)[coordinate] == true){
+				row = count;
+				break;
+			}
+			count++;
+		}
+		return row;
 	}
 }

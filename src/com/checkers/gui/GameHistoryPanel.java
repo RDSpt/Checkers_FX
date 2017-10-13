@@ -1,8 +1,6 @@
 package com.checkers.gui;
 
 import com.checkers.engine.board.*;
-import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +25,7 @@ public class GameHistoryPanel extends JPanel {
 		//scrollPane.setPreferredSize();
 		this.add(scrollPane, BorderLayout.CENTER);
 		this.setVisible(true);
-		setVisible(true);
+		this.setPreferredSize(new Dimension(50,100));
 	}
 	
 	void redo(final Board baord,

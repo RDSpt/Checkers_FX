@@ -83,6 +83,7 @@ public abstract class Move {
 		//Change player
 		builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
 		//Build board
+		builder.toString();
 		return builder.build();
 	}
 	
@@ -101,12 +102,14 @@ public abstract class Move {
 		}
 		
 		@Override
-		public boolean equals(final Object other){
-			return this ==other || other instanceof  MajorMove && super.equals(other);
+		public boolean equals(final Object other) {
+			
+			return this == other || other instanceof MajorMove && super.equals(other);
 		}
 		
 		@Override
-		public String toString(){
+		public String toString() {
+			
 			return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this
 					.destinationCoordinate);
 		}
@@ -146,9 +149,44 @@ public abstract class Move {
 		}
 		
 		@Override
+		public String toString() {
+			
+			return BoardUtils.getPositionAtCoordinate(this.movedPiece.getPiecePosition()).substring(0, 1) + "x" +
+					BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
+		}
+		
+		@Override
 		public Board execute() {
 			
-			return null;
+			final Builder builder = new Builder();
+			for (final Piece piece : this.board.currentPlayer().getActivePiece()) {
+				if (!this.movedPiece.equals(piece)) {
+					builder.setPiece(piece);
+				}
+			}
+			for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePiece()) {
+				if (!piece.equals(this.getAttackedPiece())) {
+					builder.setPiece(piece);
+				}
+			}
+			int destinationAlg = this.getAttackedPiece().getPiecePosition()+(movedPiece.getPieceAlliance()
+					.getDirection()*Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition()));
+			
+			System.out.println();
+			System.out.print(this.getAttackedPiece().getPiecePosition());
+			System.out.print(" + ");
+			System.out.print(movedPiece.getPieceAlliance().getDirection());
+			System.out.print(" x ");
+			System.out.print(movedPiece.getPiecePosition());
+			System.out.print(" - ");
+			System.out.print(this.getAttackedPiece().getPiecePosition());
+			System.out.println("= "+destinationAlg);
+			
+			
+			
+			builder.setPiece(this.movedPiece.movePiece(new AttackMove(board, movedPiece, destinationAlg, attackedPiece)));
+			builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+			return builder.build();
 		}
 		
 		@Override
