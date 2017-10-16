@@ -27,6 +27,7 @@ public class Board {
 		this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
 		this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
 		this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+		System.out.println(this);
 	}
 	
 	public static Board createStandardBoard() {
@@ -110,7 +111,7 @@ public class Board {
 		for (final Piece piece : pieces) {
 			legalMoves.addAll(piece.calculateLegalMoves(this));
 		}
-		return ImmutableList.copyOf(legalMoves);
+		return legalMoves;
 	}
 	
 	private Collection<Piece> calculateActivePieces(final List<Tile> gameBoard,

@@ -52,10 +52,14 @@ public class Double extends Piece {
 						final Alliance pieceAlliance   = pieceAtLocation.getPieceAlliance(); //get piece alliance of the
 						// location
 						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							if(!board.getTile(candidateDestinationCoordinate+currentCandidateCoordinateOffset)
-									.isTileOccupied()) {
-								legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-										pieceAtLocation));
+							final int nextTile = candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
+									currentCandidateCoordinateOffset);
+							if (BoardUtils.isValidTileCoordinate(nextTile)) {
+								final Tile finalDestination = board.getTile(nextTile);
+								if (!finalDestination.isTileOccupied()) {
+									legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+											pieceAtLocation));
+								}
 							}
 							//ATTACK MOVE
 						}

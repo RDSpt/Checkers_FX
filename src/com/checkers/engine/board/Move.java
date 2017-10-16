@@ -83,7 +83,6 @@ public abstract class Move {
 		//Change player
 		builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
 		//Build board
-		builder.toString();
 		return builder.build();
 	}
 	
@@ -169,8 +168,16 @@ public abstract class Move {
 					builder.setPiece(piece);
 				}
 			}
+			int abs = 0;
+			if (Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition())%7 ==0){
+				int den=Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition())/7;
+				abs = Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition())/den;
+			}else if(Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition())%9 ==0) {
+				int den = Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition()) / 9;
+				abs = Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition()) / den;
+			}
 			int destinationAlg = this.getAttackedPiece().getPiecePosition()+(movedPiece.getPieceAlliance()
-					.getDirection()*Math.abs(movedPiece.getPiecePosition() - this.getAttackedPiece().getPiecePosition()));
+					.getDirection()*abs);
 			
 			System.out.println();
 			System.out.print(this.getAttackedPiece().getPiecePosition());
@@ -180,7 +187,7 @@ public abstract class Move {
 			System.out.print(movedPiece.getPiecePosition());
 			System.out.print(" - ");
 			System.out.print(this.getAttackedPiece().getPiecePosition());
-			System.out.println("= "+destinationAlg);
+			System.out.println(" = "+destinationAlg);
 			
 			
 			

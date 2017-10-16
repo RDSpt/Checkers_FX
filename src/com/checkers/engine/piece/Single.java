@@ -18,79 +18,51 @@ public class Single extends Piece {
 	
 	private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) { //Excludes
 		// offset of first column
-		return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == 9);
+		return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == 7) ||
+			   BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -9);
 	}
 	
 	private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) { //Excludes
 		// offset of eighth column
-		return BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 7);
+		return BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == -7) ||
+			   BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 9);
 	}
 	
 	@Override
 	public Collection<Move> calculateLegalMoves(final Board board) { //Calculate possible moves
 		final List<Move> legalMoves = new ArrayList<>();
-		for (int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) { //Check all possible coordinates
-			int candidateDestinationCoordinate;
-			candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() *
-					currentCandidateOffset);
-			if (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
-				final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
-				if (currentCandidateOffset == 7 &&
-						!((BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
-								(BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))) {
-					if (!candidateDestinationTile.isTileOccupied()) {//Check if tile is not occupied
-						legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));//MOVE
-					}
-					else { //if it is occupied
-						final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
-						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
-						// location
-						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							if (!(BoardUtils.EIGHTH_COLUMN[pieceAtLocation.getPiecePosition()] &&
-									pieceAlliance.isBlack() ||
-									(BoardUtils.FIRST_COLUMN[pieceAtLocation.getPiecePosition()] &&
-											pieceAlliance.isWhite()))) {
-								if (!board.getTile(candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
-										currentCandidateOffset)).isTileOccupied()) {
-									legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-											pieceAtLocation));
-								}
-							}
-						}
-						//ATTACK MOVE
+		for (int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) { //Check all possible coordinates
+			int destinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() *
+					currentCandidateCoordinateOffset);
+			if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
+			final Tile candidateDestinationTile = board.getTile(destinationCoordinate);
+				if (isFirstColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
+						currentCandidateCoordinateOffset)) ||
+						isEighthColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
+								currentCandidateCoordinateOffset))) {
+					break;
+				}
+				if (!board.getTile(destinationCoordinate).isTileOccupied()) {//is tile empty?
+					//TODO PROMOTION
+					if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
+						legalMoves.add(new Move.MajorMove(board, this, destinationCoordinate));//MOVE
 					}
 				}
-				else if (currentCandidateOffset == 9 &&
-						!((BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite()) ||
-								(BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack()))) {
-					if (!candidateDestinationTile.isTileOccupied()) {//Check if tile is not occupied
-						legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));//MOVE
-					}
-					else { //if it is occupied
-						final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
-						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
-						// location
-						if (this.pieceAlliance != pieceAlliance) { //if enemy
-							/*if(!board.getTile(candidateDestinationCoordinate+currentCandidateOffset)
-									.isTileOccupied()) {
-								legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
+				else {//tile occupied
+					final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
+					final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
+					if (this.pieceAlliance != pieceAlliance) {
+						final int nextTile = destinationCoordinate + (this.pieceAlliance.getDirection() *
+								currentCandidateCoordinateOffset);
+						if (BoardUtils.isValidTileCoordinate(nextTile)) {
+							final Tile finalDestination = board.getTile(nextTile);
+							if (!finalDestination.isTileOccupied()) {
+								legalMoves.add(new Move.AttackMove(board, this, destinationCoordinate,
 										pieceAtLocation));
-							}*/
-							if (!(BoardUtils.EIGHTH_COLUMN[pieceAtLocation.getPiecePosition()] &&
-									pieceAlliance.isWhite() ||
-									(BoardUtils.FIRST_COLUMN[pieceAtLocation.getPiecePosition()] &&
-											pieceAlliance.isBlack()))) {
-								if (!board.getTile(candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
-										currentCandidateOffset)).isTileOccupied()) {
-									legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate,
-											pieceAtLocation));
-								}
 							}
-							//ATTACK MOVE
 						}
 					}
 				}
-				//TODO promotion
 			}
 		}
 		return ImmutableList.copyOf(legalMoves);
