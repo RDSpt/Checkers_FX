@@ -1,5 +1,6 @@
 package com.checkers.engine;
 
+import com.checkers.engine.board.BoardUtils;
 import com.checkers.engine.player.*;
 
 public enum Alliance {
@@ -20,6 +21,12 @@ public enum Alliance {
 		public boolean isBlack() {
 			
 			return false;
+		}
+		
+		@Override
+		public boolean isPromotionSquare(int position) {
+			
+			return BoardUtils.EIGHTH_RANK[position];
 		}
 		
 		@Override
@@ -49,6 +56,12 @@ public enum Alliance {
 		}
 		
 		@Override
+		public boolean isPromotionSquare(int position) {
+			
+			return BoardUtils.FIRST_RANK[position];
+		}
+		
+		@Override
 		public Player choosePlayer(final WhitePlayer whitePlayer,
 		                           final BlackPlayer blackPlayer) {
 			
@@ -57,8 +70,12 @@ public enum Alliance {
 	};
 	
 	public abstract int getDirection();
+	
 	public abstract boolean isWhite();
+	
 	public abstract boolean isBlack();
+	
+	public abstract boolean isPromotionSquare(int position);
 	
 	public abstract Player choosePlayer(final WhitePlayer whitePlayer,
 	                                    final BlackPlayer blackPlayer);

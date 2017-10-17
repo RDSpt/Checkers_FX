@@ -19,13 +19,13 @@ public class Single extends Piece {
 	private static boolean isFirstColumnExclusion(final int currentPosition, final int candidateOffset) { //Excludes
 		// offset of first column
 		return BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == 7) ||
-			   BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -9);
+				BoardUtils.FIRST_COLUMN[currentPosition] && (candidateOffset == -9);
 	}
 	
 	private static boolean isEighthColumnExclusion(final int currentPosition, final int candidateOffset) { //Excludes
 		// offset of eighth column
 		return BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == -7) ||
-			   BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 9);
+				BoardUtils.EIGHTH_COLUMN[currentPosition] && (candidateOffset == 9);
 	}
 	
 	@Override
@@ -34,8 +34,10 @@ public class Single extends Piece {
 		for (int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) { //Check all possible coordinates
 			int destinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() *
 					currentCandidateCoordinateOffset);
+			System.out.println("destinationCoordinate "+destinationCoordinate);
+			System.out.println("currentCandidateCoordinateOffset "+currentCandidateCoordinateOffset);
 			if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
-			final Tile candidateDestinationTile = board.getTile(destinationCoordinate);
+				final Tile candidateDestinationTile = board.getTile(destinationCoordinate);
 				if (isFirstColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
 						currentCandidateCoordinateOffset)) ||
 						isEighthColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
@@ -43,28 +45,38 @@ public class Single extends Piece {
 					break;
 				}
 				if (!board.getTile(destinationCoordinate).isTileOccupied()) {//is tile empty?
-					//TODO PROMOTION
 					if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
-						legalMoves.add(new Move.MajorMove(board, this, destinationCoordinate));//MOVE
+						if (this.pieceAlliance.isPromotionSquare(destinationCoordinate)) {
+							legalMoves.add(new Move.Promotion(new Move.MajorMove(board, this, destinationCoordinate)));
+						}
+						else {
+							legalMoves.add(new Move.MajorMove(board, this, destinationCoordinate));//MOVE}
+						}
 					}
-				}
-				else {//tile occupied
-					final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
-					final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
-					if (this.pieceAlliance != pieceAlliance) {
-						final int nextTile = destinationCoordinate + (this.pieceAlliance.getDirection() *
-								currentCandidateCoordinateOffset);
-						if (BoardUtils.isValidTileCoordinate(nextTile)) {
-							final Tile finalDestination = board.getTile(nextTile);
-							if (!finalDestination.isTileOccupied()) {
-								legalMoves.add(new Move.AttackMove(board, this, destinationCoordinate,
-										pieceAtLocation));
+				}else {//tile occupied
+						final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
+						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
+						if (this.pieceAlliance != pieceAlliance) {
+							final int nextTile = destinationCoordinate + (this.pieceAlliance.getDirection() *
+									currentCandidateCoordinateOffset);
+							if (BoardUtils.isValidTileCoordinate(nextTile)) {
+								final Tile finalDestination = board.getTile(nextTile);
+								if (!finalDestination.isTileOccupied()) {
+									if (this.pieceAlliance.isPromotionSquare(nextTile)) {
+										legalMoves.add(new Move.Promotion(new Move.AttackMove(board, this,
+												destinationCoordinate,pieceAtLocation)));
+									}
+									else {
+										legalMoves.add(new Move.AttackMove(board, this, destinationCoordinate,
+												pieceAtLocation));
+									}
+								}
 							}
 						}
 					}
 				}
 			}
-		}
+		
 		return ImmutableList.copyOf(legalMoves);
 	}
 	
@@ -78,5 +90,9 @@ public class Single extends Piece {
 	public String toString() {
 		
 		return PieceType.SINGLE.toString();
+	}
+	
+	public Piece getPromotionPiece(){
+		return new Double(this.piecePosition, this.pieceAlliance);
 	}
 }
