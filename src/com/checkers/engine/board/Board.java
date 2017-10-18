@@ -27,7 +27,6 @@ public class Board {
 		this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
 		this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
 		this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
-		System.out.println(this);
 	}
 	
 	public static Board createStandardBoard() {
@@ -48,10 +47,10 @@ public class Board {
 		builder.setPiece(new Single(17, Alliance.BLACK));
 		builder.setPiece(new Single(19, Alliance.BLACK));
 		builder.setPiece(new Single(21, Alliance.BLACK));
-		builder.setPiece(new Double(23, Alliance.BLACK));
+		builder.setPiece(new Single(23, Alliance.BLACK));
 		//White
 		//Third Row
-		builder.setPiece(new Double(40, Alliance.WHITE));
+		builder.setPiece(new Single(40, Alliance.WHITE));
 		builder.setPiece(new Single(42, Alliance.WHITE));
 		builder.setPiece(new Single(44, Alliance.WHITE));
 		builder.setPiece(new Single(46, Alliance.WHITE));

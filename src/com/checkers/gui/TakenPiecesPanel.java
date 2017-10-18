@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
-import static com.checkers.gui.Controller.MoveLog;
+import static com.checkers.gui.Table.MoveLog;
 
 public class TakenPiecesPanel extends Pane {
 	

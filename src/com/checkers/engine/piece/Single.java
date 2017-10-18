@@ -34,8 +34,6 @@ public class Single extends Piece {
 		for (int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) { //Check all possible coordinates
 			int destinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() *
 					currentCandidateCoordinateOffset);
-			System.out.println("destinationCoordinate "+destinationCoordinate);
-			System.out.println("currentCandidateCoordinateOffset "+currentCandidateCoordinateOffset);
 			if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
 				final Tile candidateDestinationTile = board.getTile(destinationCoordinate);
 				if (isFirstColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
@@ -53,10 +51,16 @@ public class Single extends Piece {
 							legalMoves.add(new Move.MajorMove(board, this, destinationCoordinate));//MOVE}
 						}
 					}
-				}else {//tile occupied
-						final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
-						final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
-						if (this.pieceAlliance != pieceAlliance) {
+				}
+				else {//tile occupied
+					final Piece    pieceAtLocation = candidateDestinationTile.getPiece(); //get piece in location
+					final Alliance pieceAlliance   = pieceAtLocation.pieceAlliance; //get piece alliance of the
+					if (this.pieceAlliance != pieceAlliance) {
+						if (BoardUtils.FIRST_COLUMN[destinationCoordinate] || BoardUtils
+								.EIGHTH_COLUMN[destinationCoordinate]) {
+							break;
+						}
+						else {
 							final int nextTile = destinationCoordinate + (this.pieceAlliance.getDirection() *
 									currentCandidateCoordinateOffset);
 							if (BoardUtils.isValidTileCoordinate(nextTile)) {
@@ -64,7 +68,7 @@ public class Single extends Piece {
 								if (!finalDestination.isTileOccupied()) {
 									if (this.pieceAlliance.isPromotionSquare(nextTile)) {
 										legalMoves.add(new Move.Promotion(new Move.AttackMove(board, this,
-												destinationCoordinate,pieceAtLocation)));
+												destinationCoordinate, pieceAtLocation)));
 									}
 									else {
 										legalMoves.add(new Move.AttackMove(board, this, destinationCoordinate,
@@ -76,7 +80,7 @@ public class Single extends Piece {
 					}
 				}
 			}
-		
+		}
 		return ImmutableList.copyOf(legalMoves);
 	}
 	
@@ -92,7 +96,8 @@ public class Single extends Piece {
 		return PieceType.SINGLE.toString();
 	}
 	
-	public Piece getPromotionPiece(){
+	public Piece getPromotionPiece() {
+		
 		return new Double(this.piecePosition, this.pieceAlliance);
 	}
 }

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static com.checkers.gui.Controller.MoveLog;
+import static com.checkers.gui.Table.MoveLog;
 
 public class GameHistoryPanel extends JPanel {
 	
