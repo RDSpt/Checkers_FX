@@ -28,7 +28,7 @@ public class GameHistoryPanel extends JPanel {
 		this.setPreferredSize(new Dimension(50,100));
 	}
 	
-	void redo(final Board baord,
+	void redo(final Board board,
 	          final MoveLog moveHistory) {
 		
 		

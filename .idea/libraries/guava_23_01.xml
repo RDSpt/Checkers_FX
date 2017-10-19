@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="guava-23.01">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Checkers_fx/Lib/guava-23.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

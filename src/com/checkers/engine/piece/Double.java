@@ -33,7 +33,7 @@ public class Double extends Piece {
 	@Override
 	public Collection<Move> calculateLegalMoves(Board board) {
 		
-		final List<Move> legalMoves = new ArrayList<>();
+		List<Move> legalMoves = new ArrayList<>();
 		for (final int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) {
 			int candidateDestinationCoordinate = this.piecePosition;
 			while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
@@ -52,6 +52,10 @@ public class Double extends Piece {
 						final Alliance pieceAlliance   = pieceAtLocation.getPieceAlliance(); //get piece alliance of the
 						// location
 						if (this.pieceAlliance != pieceAlliance) { //if enemy
+							if (BoardUtils.FIRST_COLUMN[candidateDestinationCoordinate] || BoardUtils
+									.EIGHTH_COLUMN[candidateDestinationCoordinate]) {
+								break;
+							}
 							final int nextTile = candidateDestinationCoordinate + (this.pieceAlliance.getDirection() *
 									currentCandidateCoordinateOffset);
 							if (BoardUtils.isValidTileCoordinate(nextTile)) {
@@ -68,6 +72,13 @@ public class Double extends Piece {
 				}
 			}
 		}
+		final List<Move> attackMoves = new ArrayList<>();
+		for(Move move : legalMoves){
+			if(move.isAttack()){
+				attackMoves.add(move);
+			}
+		}
+		legalMoves = attackMoves.isEmpty()? legalMoves : attackMoves;
 		return ImmutableList.copyOf(legalMoves);
 	}
 	

@@ -2,6 +2,8 @@ package com.checkers.engine.board;
 
 import com.checkers.engine.piece.*;
 
+import java.util.Collection;
+
 import static com.checkers.engine.board.Board.Builder;
 
 public abstract class Move {
@@ -57,6 +59,10 @@ public abstract class Move {
 	
 	public boolean isAttack() {
 		
+		return false;
+	}
+	
+	public boolean isPromotion(){
 		return false;
 	}
 	
@@ -185,7 +191,18 @@ public abstract class Move {
 			int destinationAlg = this.getAttackedPiece().getPiecePosition() + (movedPiece.getPieceAlliance()
 					.getDirection() * abs);
 			builder.setPiece(this.movedPiece.movePiece(new AttackMove(board, movedPiece, destinationAlg, attackedPiece)));
-			builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+			if (new AttackMove(board, movedPiece, destinationAlg, attackedPiece).isAttack()){
+				Board newLegalMoves = board.currentPlayer()
+						.makeMove(new AttackMove(board, movedPiece, destinationAlg, attackedPiece)).getTransitionBoard();
+				Collection<Move> newMoves = this.movedPiece.calculateAttackMoves(newLegalMoves);
+				/*if(newMoves.size() > 0){
+					builder.setMoveMaker(this.board.currentPlayer().getAlliance());
+				}
+				
+				
+			}else {*/
+				builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+			}
 			return builder.build();
 		}
 		
@@ -251,14 +268,15 @@ public abstract class Move {
 		
 		@Override
 		public Board execute() {
-			final Board singleMovedBoard = this.decoratedMove.execute();
-			final Board.Builder builder = new Builder();
-			for(final Piece piece: singleMovedBoard.currentPlayer().getActivePiece()){
-				if(!this.promotedSingle.equals(piece)){
+			
+			final Board         singleMovedBoard = this.decoratedMove.execute();
+			final Board.Builder builder          = new Builder();
+			for (final Piece piece : singleMovedBoard.currentPlayer().getActivePiece()) {
+				if (!this.promotedSingle.equals(piece)) {
 					builder.setPiece(piece);
 				}
 			}
-			for (final Piece piece : singleMovedBoard.currentPlayer().getOpponent().getActivePiece()){
+			for (final Piece piece : singleMovedBoard.currentPlayer().getOpponent().getActivePiece()) {
 				builder.setPiece(piece);
 			}
 			builder.setPiece(this.promotedSingle.getPromotionPiece().movePiece(this));
@@ -270,6 +288,11 @@ public abstract class Move {
 		public boolean isAttack() {
 			
 			return this.decoratedMove.isAttack();
+		}
+		
+		@Override
+		public boolean isPromotion(){
+			return true;
 		}
 		
 		@Override

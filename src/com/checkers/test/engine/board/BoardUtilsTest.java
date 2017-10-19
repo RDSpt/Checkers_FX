@@ -21,6 +21,7 @@ class BoardUtilsTest {
 		assertFalse(BoardUtils.FIRST_COLUMN[1]);
 		assertFalse(BoardUtils.FIRST_COLUMN[2]);
 		assertFalse(BoardUtils.FIRST_COLUMN[9]);
+		
 		assertFalse(BoardUtils.FIRST_COLUMN[10]);
 		assertFalse(BoardUtils.FIRST_COLUMN[17]);
 		assertFalse(BoardUtils.FIRST_COLUMN[18]);

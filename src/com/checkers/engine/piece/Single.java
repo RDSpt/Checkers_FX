@@ -30,7 +30,7 @@ public class Single extends Piece {
 	
 	@Override
 	public Collection<Move> calculateLegalMoves(final Board board) { //Calculate possible moves
-		final List<Move> legalMoves = new ArrayList<>();
+		List<Move> legalMoves = new ArrayList<>();
 		for (int currentCandidateCoordinateOffset : CANDIDATE_MOVE_COORDINATES) { //Check all possible coordinates
 			int destinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() *
 					currentCandidateCoordinateOffset);
@@ -40,7 +40,7 @@ public class Single extends Piece {
 						currentCandidateCoordinateOffset)) ||
 						isEighthColumnExclusion(this.piecePosition, (this.pieceAlliance.getDirection() *
 								currentCandidateCoordinateOffset))) {
-					break;
+					continue;
 				}
 				if (!board.getTile(destinationCoordinate).isTileOccupied()) {//is tile empty?
 					if (BoardUtils.isValidTileCoordinate(destinationCoordinate)) {
@@ -58,7 +58,7 @@ public class Single extends Piece {
 					if (this.pieceAlliance != pieceAlliance) {
 						if (BoardUtils.FIRST_COLUMN[destinationCoordinate] || BoardUtils
 								.EIGHTH_COLUMN[destinationCoordinate]) {
-							break;
+							continue;
 						}
 						else {
 							final int nextTile = destinationCoordinate + (this.pieceAlliance.getDirection() *
@@ -81,6 +81,13 @@ public class Single extends Piece {
 				}
 			}
 		}
+		final List<Move> attackMoves = new ArrayList<>();
+		for(Move move : legalMoves){
+			if(move.isAttack()){
+				attackMoves.add(move);
+			}
+		}
+		legalMoves = attackMoves.isEmpty()? legalMoves : attackMoves;
 		return ImmutableList.copyOf(legalMoves);
 	}
 	

@@ -3,7 +3,7 @@ package com.checkers.engine.piece;
 import com.checkers.engine.Alliance;
 import com.checkers.engine.board.*;
 
-import java.util.Collection;
+import java.util.*;
 
 public abstract class Piece {
 	
@@ -56,6 +56,16 @@ public abstract class Piece {
 	
 	public abstract Collection<Move> calculateLegalMoves(final Board board);
 	
+	public Collection<Move> calculateAttackMoves(final Board board){
+		final List<Move> attackMoves = new ArrayList<>();
+		for(Move move : calculateLegalMoves(board)){
+			if(move.isAttack()){
+				attackMoves.add(move);
+			}
+		}
+		return attackMoves;
+	}
+	
 	public abstract Piece movePiece(Move move);
 	
 	public Alliance getPieceAlliance() {
@@ -73,8 +83,8 @@ public abstract class Piece {
 	};
 	
 	public enum PieceType {
-		SINGLE("S",200),
-		DOUBLE("D",400);
+		SINGLE("S",100),
+		DOUBLE("D",500);
 		
 		private String pieceName;
 		private int pieceValue;

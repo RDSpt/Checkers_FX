@@ -28,32 +28,37 @@ public class MiniMax implements MoveStrategy {
 		int        highestSeenValue = Integer.MIN_VALUE;
 		int        lowestSeenValue  = Integer.MAX_VALUE;
 		int        currentValue;
-		System.out.println(board.currentPlayer() + " THINKING with depth = " + searchDepth);
 		int numMoves = board.currentPlayer().getLegalMoves().size();
-		for (final Move move : board.currentPlayer().getLegalMoves()) {
-			final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
-			if (moveTransition.getMoveStatus().isDone()) {
-				currentValue = board.currentPlayer().getAlliance().isWhite() ?
-						min(moveTransition.getTransitionBoard(), searchDepth - 1) :
-						max(moveTransition.getTransitionBoard(), searchDepth - 1);
-				if (board.currentPlayer().getAlliance().isWhite() && currentValue >= highestSeenValue) {
-					highestSeenValue = currentValue;
-					bestMove = move;
-				}
-				else if (board.currentPlayer().getAlliance().isBlack() && currentValue <= lowestSeenValue) {
-					lowestSeenValue = currentValue;
-					bestMove = move;
+		if(numMoves >0) {
+			for (final Move move : board.currentPlayer().getLegalMoves()) {
+				final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+				if (moveTransition.getMoveStatus().isDone()) {
+					currentValue = board.currentPlayer().getAlliance().isWhite() ?
+							min(moveTransition.getTransitionBoard(), searchDepth - 1) :
+							max(moveTransition.getTransitionBoard(), searchDepth - 1);
+					if (board.currentPlayer().getAlliance().isWhite() && currentValue >= highestSeenValue) {
+						highestSeenValue = currentValue;
+						bestMove = move;
+					}
+					else if (board.currentPlayer().getAlliance().isBlack() && currentValue <= lowestSeenValue) {
+						lowestSeenValue = currentValue;
+						bestMove = move;
+					}
 				}
 			}
+			final long executionTime = System.currentTimeMillis() - startTime;
+			System.out.println("AI move: " + bestMove.toString());
+			System.out.println(board.currentPlayer() + " took " + (executionTime / 1000) + " seconds thinking");
+		}else
+		{
+			System.out.println("No more moves!");
 		}
-		final long executionTime = System.currentTimeMillis() - startTime;
-		System.out.println(board.currentPlayer() + " took " + (executionTime/ 1000) + " seconds thinking");
 		return bestMove;
 	}
 	
 	public int min(final Board board, final int depth) {
 		
-		if (depth == 0 /*|| game over*/) {
+		if (depth == 0 || isEndGameScenario(board)) {
 			return this.boardEvaluator.evaluate(board);
 		}
 		int lowestSeenValue = Integer.MAX_VALUE;

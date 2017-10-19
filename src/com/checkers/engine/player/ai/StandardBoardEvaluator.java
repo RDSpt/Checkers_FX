@@ -1,6 +1,6 @@
 package com.checkers.engine.player.ai;
 
-import com.checkers.engine.board.Board;
+import com.checkers.engine.board.*;
 import com.checkers.engine.piece.Piece;
 import com.checkers.engine.player.Player;
 
@@ -15,7 +15,27 @@ public final class StandardBoardEvaluator implements BoardEvaluator {
 	
 	private int scorePlayer(final Player player) {
 		
-		return pieceValue(player) + mobility(player);
+		return pieceValue(player) + mobility(player) + attackPossible(player) + promotionNear(player);
+	}
+	
+	private int promotionNear(final Player player) {
+		for (Move move: player.getLegalMoves()){
+			if(move.isPromotion()){
+				return 2000;
+			}
+		}
+		
+		
+		return 0;
+	}
+	
+	private int attackPossible(final Player player) {
+		for (Move move : player.getLegalMoves()){
+			if(move.isAttack()){
+				return 10000;
+			}
+		}
+		return 0;
 	}
 	
 	private static int mobility(final Player player) {

@@ -24,6 +24,7 @@ public class GameSetup extends Scene {
 		super(new Pane());
 		VBox frame = new VBox();
 		createWindow(frame);
+		searchDepthValue = (int) searchDepthSpinner.getValue();
 		setRoot(frame);
 	}
 	
@@ -50,23 +51,18 @@ public class GameSetup extends Scene {
 		blackComputerButton.setSelected(true);
 		if(blackPlayerType == PlayerType.HUMAN){
 			blackGroup.selectToggle(blackHumanButton);
-			/*blackHumanButton.setSelected(true);
-			blackComputerButton.setSelected(false);*/
 		}else{
 			blackGroup.selectToggle(blackComputerButton);
-			/*blackHumanButton.setSelected(false);
-			blackComputerButton.setSelected(true);*/
 		}
 		
-		
-		frame.getChildren().add(new Label("White"));
-		frame.getChildren().add(whiteHumanButton);
-		frame.getChildren().add(whiteComputerButton);
 		frame.getChildren().add(new Label("Black"));
 		frame.getChildren().add(blackHumanButton);
 		frame.getChildren().add(blackComputerButton);
+		frame.getChildren().add(new Label("White"));
+		frame.getChildren().add(whiteHumanButton);
+		frame.getChildren().add(whiteComputerButton);
 		frame.getChildren().add(new Label("Search level"));
-		this.searchDepthSpinner = new Spinner(0, 6, 4, 1);
+		this.searchDepthSpinner = new Spinner(1, 10, 5, 1);
 		frame.getChildren().add(searchDepthSpinner);
 		Button cancel = new Button("Cancel");
 		Button ok     = new Button("OK");
